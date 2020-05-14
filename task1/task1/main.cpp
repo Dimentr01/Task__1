@@ -17,6 +17,60 @@ const float r = 30;
 
 const float pi = 3.1415926535f;
 
+void perevod()
+{
+	
+
+	ofstream dop("dop.txt");
+	ifstream normal("input.txt");
+	string s;
+
+	getline(normal, s);
+	int** dinamic_array = new int* [s.size()*1000];
+	for (int i = 0; i < s.size()*1000; i++) { dinamic_array[i] = new int[s.size()*1000]; }
+
+	//вначале считываю количество вершин и связей
+	int svize = 0;
+	int counter_strok=0;
+	int counter_v = 0;
+
+	//считаем количество вершин, связей; записываем как связаны вершины
+	while (!normal.eof())
+	{
+		if (counter_strok != 0)
+			getline(normal, s);
+		for (int i = 0; i < s.size(); i++)
+		{
+			if (s[i] == '0' || s[i] == '1')
+				counter_v = counter_v + 1;
+			if (s[i] == '1')
+			{
+				svize = svize + 1;
+				dinamic_array[counter_strok][counter_v - 1] = 1;
+			}
+			else if(s[i]==0) dinamic_array[counter_strok][counter_v - 1] = 0;
+		}
+		counter_strok++;
+		counter_v = 0;
+	}
+
+	//выводим
+	for (int i = 0; i < counter_strok+1; i++)
+	{
+		if (i == 0)
+			dop << counter_strok << " " << svize << endl;
+		for (int j = 0; j < counter_strok+1; j++)
+		{
+			if (dinamic_array[i][j]==1)
+				dop << i << " " << j << endl;
+		}
+	}
+
+	normal.close();
+	dop.close();
+	delete[] dinamic_array;
+}
+
 float Distance(Vector2f start, Vector2f end) {
 	return sqrt((start.x - end.x) * (start.x - end.x) + (start.y - end.y) * (start.y - end.y));
 }
@@ -60,8 +114,9 @@ int main()
 	setlocale(LC_ALL, "russian");
 	std::cout << "In sfml window press Enter for start algorithm" << std::endl;
 
+	perevod();
 
-	ifstream fin("input.txt");
+	ifstream fin("dop.txt");
 	ContextSettings settings;
 	settings.antialiasingLevel = 8;
 	RenderWindow window(VideoMode(width, height), "task1", Style::Default, settings);
