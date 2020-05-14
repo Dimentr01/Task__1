@@ -1,22 +1,21 @@
 #include <SFML/Graphics.hpp>
 #include <fstream>
-#include <iostream>
 #include <algorithm>
 #include <stdlib.h>
 #include <string>
 #include <queue>
+#include <iostream>
+
+using namespace sf;
+using namespace std;
 
 // первая цифра, число вершнин, вторая-число связностей, дальше как соединины, например, 1 2 означает из второй вершину в третью (вершины нумеруются с 0)
-#define max(x,y) x<y?x:y
 
 const int width = 1000;
 const int height = 1000;
 const float r = 30;
 
 const float pi = 3.1415926535f;
-
-using namespace sf;
-using namespace std;
 
 float Distance(Vector2f start, Vector2f end) {
 	return sqrt((start.x - end.x) * (start.x - end.x) + (start.y - end.y) * (start.y - end.y));
@@ -27,7 +26,7 @@ float lenVector2f(Vector2f point) {
 }
 
 
-void arrow(RenderWindow *window, Vector2f A, Vector2f B, Color colour) {
+void arrow(RenderWindow* window, Vector2f A, Vector2f B, Color colour) {
 	if (A != B) {
 		VertexArray lines(LinesStrip, 2);
 		lines[0].position = A;
@@ -58,8 +57,11 @@ void arrow(RenderWindow *window, Vector2f A, Vector2f B, Color colour) {
 
 int main()
 {
+	setlocale(LC_ALL, "russian");
+	std::cout << "In sfml window press Enter for start algorithm" << std::endl;
+
+
 	ifstream fin("input.txt");
-	setlocale(LC_ALL, "rus");
 	ContextSettings settings;
 	settings.antialiasingLevel = 8;
 	RenderWindow window(VideoMode(width, height), "task1", Style::Default, settings);
@@ -76,7 +78,7 @@ int main()
 		points[i] = Vector2f(0, 0);
 		points[i].x = 400 * sin((float)i * 2.f / (float)vvod_1 * pi) + width / 2;
 		points[i].y = -400 * cos((float)i * 2.f / (float)vvod_1 * pi) + height / 2;
-	//	cout << points[i].x << " " << points[i].y << endl;
+		//	cout << points[i].x << " " << points[i].y << endl;
 	}
 	Font font;
 	font.loadFromFile("Arial.ttf");
@@ -89,7 +91,7 @@ int main()
 		else {
 			names[i].setPosition(points[i] - Vector2f(names[i].getGlobalBounds().width / 2.f + 1.f, names[i].getGlobalBounds().height - 2.f));
 		}
-	//	cout << names[i].getLocalBounds().height << " " << names[i].getLocalBounds().width << endl;
+		//	cout << names[i].getLocalBounds().height << " " << names[i].getLocalBounds().width << endl;
 	}
 	CircleShape* circles = new CircleShape[vvod_1];
 	for (int i = 0; i < vvod_1; i++) {
@@ -159,7 +161,7 @@ int main()
 		}
 	}
 	bool visible = false;
-	
+
 	while (window.isOpen())
 	{
 		Event event;
@@ -184,9 +186,6 @@ int main()
 			}
 		}
 
-
-		
-
 		for (int i = 0; i < vvod_1; i++) {
 			window.draw(circles[i]);
 			window.draw(names[i]);
@@ -197,7 +196,7 @@ int main()
 		}
 
 		window.display();
-		
+
 	}
 	return 0;
 }
